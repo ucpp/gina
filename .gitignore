@@ -1,32 +1,36 @@
-# Prerequisites
-*.d
+# VSCode
+.vscode/
 
-# Compiled Object files
-*.slo
-*.lo
+# Build artifacts
+build/
+[Bb]uild/
 *.o
 *.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
 *.exe
+*.pdb
+*.lib
+*.dll
 *.out
-*.app
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.filters
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+
+# ImGui
+imgui.ini
+
+# assets
+demo/assets/
