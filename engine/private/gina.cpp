@@ -1,7 +1,10 @@
 #include "gina.h"
 
 #include <iostream>
-#include "imgui.h"
+#include <imgui.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace Gina
 {

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+project(gina_animation)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,6 +15,7 @@ option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DEMO  "Build demo"  ON)
 
 add_subdirectory(${EXTERNALS_PATH}/imgui)
+add_subdirectory(${EXTERNALS_PATH}/assimp)
 
 add_subdirectory(engine)
 
