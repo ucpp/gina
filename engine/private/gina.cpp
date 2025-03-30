@@ -7,6 +7,8 @@
 #include <assimp/postprocess.h>
 #include <json.hpp>
 #include <DirectXTex.h>
+#include <d3d12.h>
+#include <pix3.h>
 
 namespace gina
 {

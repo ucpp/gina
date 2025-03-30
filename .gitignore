@@ -34,3 +34,7 @@ imgui.ini
 
 # assets
 demo/assets/
+
+# pix binaries
+!externals/pix/bin/
+!externals/pix/bin/**

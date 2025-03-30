@@ -20,6 +20,11 @@ target_link_libraries(
     imgui  
     assimp  
     dxtex  
+    d3d12  
+    dxgi  
+    dxguid  
+    d3dcompiler  
+    ${EXTERNALS_PATH}/pix/bin/WinPixEventRuntime.lib  
 )
 
 target_include_directories(
@@ -28,4 +33,5 @@ target_include_directories(
     ${EXTERNALS_PATH}/imgui/  
     ${EXTERNALS_PATH}/json/  
     ${EXTERNALS_PATH}/dxtex/DirectXTex/  
+    ${EXTERNALS_PATH}/pix/include/WinPixEventRuntime/
 )

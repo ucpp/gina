@@ -29,3 +29,11 @@ if(BUILD_TESTS)
     add_subdirectory(${EXTERNALS_PATH}/googletest)
     add_subdirectory(tests)
 endif()
+
+add_custom_target(copy_pix ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${EXTERNALS_PATH}/pix/bin/WinPixEventRuntime.dll
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/
+    COMMENT "Copying WinPixEventRuntime.dll to bin/$<CONFIG>"
+)
