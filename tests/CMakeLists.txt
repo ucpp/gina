@@ -8,8 +8,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     gtest_main  
 )
 
-set(THIRD_PARTY_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../externals)
-
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${EXTERNALS_PATH}/googletest/include/)
 
