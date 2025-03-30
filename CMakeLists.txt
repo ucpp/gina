@@ -24,5 +24,7 @@ if(BUILD_DEMO)
 endif()
 
 if(BUILD_TESTS)
-
+    set(GOOGLETEST_VERSION 1.14.0)
+    add_subdirectory(${EXTERNALS_PATH}/googletest)
+    add_subdirectory(tests)
 endif()

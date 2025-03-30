@@ -1,9 +1,12 @@
 #ifndef _GINA_H_
 #define _GINA_H_
 
-namespace Gina
+#include <cstdint>
+#include <iostream>
+
+namespace gina
 {
-    void Test();
+    int32_t Sum(int32_t lhs, int32_t rhs);
 }
 
 #endif // !_GINA_H_

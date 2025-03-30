@@ -7,10 +7,10 @@
 #include <assimp/postprocess.h>
 #include <json.hpp>
 
-namespace Gina
+namespace gina
 {
-    void Test()
+    int32_t Sum(int32_t lhs, int32_t rhs)
     {
-        std::cout << "Hello, Gina!\n";
+        return lhs + rhs;
     }
 }
