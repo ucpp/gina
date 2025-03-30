@@ -34,4 +34,5 @@ target_include_directories(
     ${EXTERNALS_PATH}/json/  
     ${EXTERNALS_PATH}/dxtex/DirectXTex/  
     ${EXTERNALS_PATH}/pix/include/WinPixEventRuntime/
+    ${EXTERNALS_PATH}/dx/  
 )

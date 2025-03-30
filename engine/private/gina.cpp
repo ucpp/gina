@@ -9,6 +9,7 @@
 #include <DirectXTex.h>
 #include <d3d12.h>
 #include <pix3.h>
+#include <d3dx12.h>
 
 namespace gina
 {
