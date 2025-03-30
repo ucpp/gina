@@ -16,6 +16,7 @@ option(BUILD_DEMO  "Build demo"  ON)
 
 add_subdirectory(${EXTERNALS_PATH}/imgui)
 add_subdirectory(${EXTERNALS_PATH}/assimp)
+add_subdirectory(${EXTERNALS_PATH}/dxtex)
 
 add_subdirectory(engine)
 

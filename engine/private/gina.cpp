@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <json.hpp>
+#include <DirectXTex.h>
 
 namespace gina
 {
