@@ -1,6 +1,10 @@
 project(gina_tests)
 
-add_executable(${PROJECT_NAME} gina_tests.cpp)
+set(TEST_SOURCES
+    gina_actions_tests.cpp
+)
+
+add_executable(${PROJECT_NAME} ${TEST_SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     gina  
@@ -9,7 +13,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${EXTERNALS_PATH}/googletest/include/)
+    ${EXTERNALS_PATH}/googletest/include/
+    ${CMAKE_SOURCE_DIR}/engine/public/
+)
 
 enable_testing()
 add_test(NAME gina_tests COMMAND ${PROJECT_NAME})
