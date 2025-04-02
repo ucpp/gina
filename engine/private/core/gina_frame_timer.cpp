@@ -5,8 +5,7 @@ namespace gina
 {
     FrameTimer::FrameTimer() noexcept
     {
-        const BOOL success = QueryPerformanceFrequency(&m_qpcFrequency);
-        GINA_ASSERT_MSG(success, "High-performance counter not supported");
+        QueryPerformanceFrequency(&m_qpcFrequency);
         Reset();
     }
 
@@ -17,7 +16,7 @@ namespace gina
 
     double FrameTimer::GetElapsedSeconds() const noexcept
     {
-        int64 currentTime;
+        LARGE_INTEGER currentTime;
         QueryPerformanceCounter(&currentTime);
 
         const auto timeDelta = currentTime.QuadPart - m_qpcLastTime.QuadPart;

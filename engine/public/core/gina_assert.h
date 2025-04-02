@@ -1,5 +1,5 @@
-#ifndef GINA_ASSERT_H
-#define GINA_ASSERT_H
+#ifndef _GINA_ASSERT_H
+#define _GINA_ASSERT_H
 
 #include "core/gina_logger.h"
 
@@ -28,4 +28,4 @@
     #define GINA_ASSERT(expr)
 #endif
 
-#endif // GINA_ASSERT_H
+#endif // !_GINA_ASSERT_H

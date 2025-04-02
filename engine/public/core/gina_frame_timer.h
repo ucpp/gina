@@ -4,8 +4,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include "core/gina_types.h"
-
 namespace gina
 {
     class FrameTimer final
@@ -18,8 +16,8 @@ namespace gina
         double GetElapsedMilliseconds() const noexcept;
 
     private:
-        int64 m_qpcFrequency;
-        int64 m_qpcLastTime;
+        LARGE_INTEGER m_qpcFrequency;
+        LARGE_INTEGER m_qpcLastTime;
     };
 }
 
