@@ -21,6 +21,7 @@ namespace gina
     class Input : public Singleton<Input>
     {
         friend class Singleton<Input>;
+        friend class Window;
 
     public:
         bool GetKey(uint32 keyCode) const noexcept { return m_keyStates.test(keyCode); }
