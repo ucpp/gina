@@ -1,7 +1,8 @@
 project(gina_tests)
 
 set(TEST_SOURCES
-    gina_actions_tests.cpp
+    gina_actions_tests.cpp  
+    gina_math_tests.cpp  
 )
 
 add_executable(${PROJECT_NAME} ${TEST_SOURCES})

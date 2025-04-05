@@ -4,6 +4,17 @@ project(gina_animation)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
+message(STATUS "Compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
+
+if(MSVC)
+    add_compile_options(/arch:SSE2)
+    message(STATUS "Using MSVC SSE2 flags: /arch:SSE2")
+else()
+    add_compile_options(-msse2)
+    message(STATUS "Using GCC/Clang SSE2 flags: -msse2")
+endif()
+
 add_compile_definitions(UNICODE)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
