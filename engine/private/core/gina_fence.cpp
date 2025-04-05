@@ -16,7 +16,7 @@ namespace gina
 
     void Fence::Initialize(ID3D12Device* device)
     {
-        GINA_ASSERT(device != nullptr, "Invalid D3D12 device");
+        GINA_ASSERT_MSG(device != nullptr, "Invalid D3D12 device");
 
         HRESULT hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
         GINA_ASSERT_HRESULT(hr, "Failed to create D3D12 fence");
@@ -27,8 +27,8 @@ namespace gina
 
     uint64 Fence::Signal(ID3D12CommandQueue* commandQueue)
     {
-        GINA_ASSERT(commandQueue != nullptr, "Invalid command queue");
-        GINA_ASSERT(m_fence != nullptr, "Fence not initialized");
+        GINA_ASSERT_MSG(commandQueue != nullptr, "Invalid command queue");
+        GINA_ASSERT_MSG(m_fence != nullptr, "Fence not initialized");
 
         const uint64 signalValue = ++m_currentValue;
         HRESULT hr = commandQueue->Signal(m_fence.Get(), signalValue);
@@ -50,7 +50,7 @@ namespace gina
 
     void Fence::WaitOnGPU(ID3D12CommandQueue* commandQueue, uint64 waitValue)
     {
-        GINA_ASSERT(commandQueue != nullptr, "Invalid command queue");
+        GINA_ASSERT_MSG(commandQueue != nullptr, "Invalid command queue");
         HRESULT hr = commandQueue->Wait(m_fence.Get(), waitValue);
         GINA_ASSERT_HRESULT(hr, "Failed to wait on fence (GPU)");
     }
@@ -63,6 +63,6 @@ namespace gina
     void Fence::Create()
     {
         m_eventHandle = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
-        GINA_ASSERT(m_eventHandle != nullptr, "Failed to create fence event");
+        GINA_ASSERT_MSG(m_eventHandle != nullptr, "Failed to create fence event");
     }
 }
