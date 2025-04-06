@@ -31,79 +31,79 @@ namespace gina
 #endif
         }
 
-        float BasicMathImpl::length2(float x, float y) noexcept
+        float BasicMathImpl::length2(const float2& vec) noexcept
         {
-            return x * x + y * y;
+            return vec.x * vec.x + vec.y * vec.y;
         }
 
-        float BasicMathImpl::dot2(float ax, float ay, float bx, float by) noexcept
+        float BasicMathImpl::dot2(const float2& lhs, const float2& rhs) noexcept
         {
-            return ax * bx + ay * by;
+            return lhs.x * rhs.x + lhs.y * rhs.y;
         }
 
-        void BasicMathImpl::normalize2(float& x, float& y) noexcept
+        void BasicMathImpl::normalize2(float2& vec) noexcept
         {
-            const float lenSq = x*x + y*y;
+            const float lenSq = vec.x * vec.x + vec.y * vec.y;
             if (lenSq < EPSILON)
             {
-                x = y = 0.0f;
+                vec.x = vec.y = 0.0f;
                 return;
             }
-            
+
             const float invLen = 1.0f / std::sqrt(lenSq);
-            x *= invLen;
-            y *= invLen;
+            vec.x *= invLen;
+            vec.y *= invLen;
         }
 
-        void BasicMathImpl::add2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept
+        void BasicMathImpl::add2(float2& result, const float2& lhs, const float2& rhs) noexcept
         {
-            rx = ax + bx;
-            ry = ay + by;
+            result.x = lhs.x + rhs.x;
+            result.y = lhs.y + rhs.y;
         }
 
-        void BasicMathImpl::sub2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept
+        void BasicMathImpl::sub2(float2& result, const float2& lhs, const float2& rhs) noexcept
         {
-            rx = ax - bx;
-            ry = ay - by;
+            result.x = lhs.x - rhs.x;
+            result.y = lhs.y - rhs.y;
         }
 
-        void BasicMathImpl::mul2(float& rx, float& ry, float x, float y, float scalar) noexcept
+        void BasicMathImpl::mul2(float2& result, const float2& vec, float scalar) noexcept
         {
-            rx = x * scalar;
-            ry = y * scalar;
+            result.x = vec.x * scalar;
+            result.y = vec.y * scalar;
         }
 
-        void BasicMathImpl::div2(float& rx, float& ry, float x, float y, float scalar) noexcept
+        void BasicMathImpl::div2(float2& result, const float2& vec, float scalar) noexcept
         {
             if (std::fabs(scalar) < EPSILON)
             {
-                rx = ry = 0.0f;
+                result.x = result.y = 0.0f;
                 return;
             }
             float invScalar = 1.0f / scalar;
-            rx = x * invScalar;
-            ry = y * invScalar;
+            result.x = vec.x * invScalar;
+            result.y = vec.y * invScalar;
         }
 
-        void BasicMathImpl::lerp2(float& rx, float& ry, float ax, float ay, float bx, float by, float t) noexcept
+        void BasicMathImpl::lerp2(float2& result, const float2& lhs, const float2& rhs, float t) noexcept
         {
-            rx = ax + (bx - ax) * t;
-            ry = ay + (by - ay) * t;
+            result.x = lhs.x + (rhs.x - lhs.x) * t;
+            result.y = lhs.y + (rhs.y - lhs.y) * t;
         }
 
 #if defined(GINA_SSE2_ENABLED)
-        float SSE2MathImpl::length2(float x, float y) noexcept
+        float SSE2MathImpl::length2(const float2& vec) noexcept
         {
-            __m128 v = _mm_set_ps(0.0f, 0.0f, y, x);
+            __m128 v = _mm_set_ps(0.0f, 0.0f, vec.y, vec.x);
             __m128 sq = _mm_mul_ps(v, v);
             return _mm_cvtss_f32(_mm_add_ss(sq, _mm_shuffle_ps(sq, sq, _MM_SHUFFLE(1, 1, 1, 1))));
         }
 
-        float SSE2MathImpl::dot2(float ax, float ay, float bx, float by) noexcept
+        float SSE2MathImpl::dot2(const float2& lhs, const float2& rhs) noexcept
         {
-            __m128 a = _mm_set_ps(0.0f, 0.0f, ay, ax);
-            __m128 b = _mm_set_ps(0.0f, 0.0f, by, bx);
-            __m128 mul = _mm_mul_ps(a, b);
+            __m128 va = _mm_set_ps(0.0f, 0.0f, lhs.y, lhs.x);
+            __m128 vb = _mm_set_ps(0.0f, 0.0f, rhs.y, rhs.x);
+            __m128 mul = _mm_mul_ps(va, vb);
             return _mm_cvtss_f32(_mm_add_ss(mul, _mm_shuffle_ps(mul, mul, _MM_SHUFFLE(1, 1, 1, 1))));
         }
 
@@ -127,82 +127,82 @@ namespace gina
          * 
          * Reference: Intel Intrinsics Guide documentation
          */
-        void SSE2MathImpl::normalize2(float& x, float& y) noexcept
+        void SSE2MathImpl::normalize2(float2& vec) noexcept
         {
-            __m128 vec = _mm_set_ps(0.0f, 0.0f, y, x);
-            __m128 sq = _mm_mul_ps(vec, vec);
-            
+            __m128 v = _mm_set_ps(0.0f, 0.0f, vec.y, vec.x);
+            __m128 sq = _mm_mul_ps(v, v);
+
             __m128 sum = _mm_add_ss(sq, _mm_shuffle_ps(sq, sq, _MM_SHUFFLE(1, 1, 1, 1)));
             if (_mm_cvtss_f32(sum) < EPSILON)
             {
-                x = y = 0.0f;
+                vec.x = vec.y = 0.0f;
                 return;
             }
 
             __m128 rsqrt = _mm_rsqrt_ss(sum);
             const __m128 half = _mm_set_ss(0.5f);
             const __m128 three = _mm_set_ss(3.0f);
-            
+
             __m128 nr = _mm_mul_ss(_mm_mul_ss(sum, rsqrt), rsqrt);
             rsqrt = _mm_mul_ss(rsqrt, _mm_sub_ss(three, nr));
             rsqrt = _mm_mul_ss(rsqrt, half);
 
             rsqrt = _mm_shuffle_ps(rsqrt, rsqrt, _MM_SHUFFLE(0, 0, 0, 0));
-            vec = _mm_mul_ps(vec, rsqrt);
+            v = _mm_mul_ps(v, rsqrt);
 
-            _mm_store_ss(&x, vec);
-            _mm_store_ss(&y, _mm_shuffle_ps(vec, vec, _MM_SHUFFLE(1, 1, 1, 1)));
+            _mm_store_ss(&vec.x, v);
+            _mm_store_ss(&vec.y, _mm_shuffle_ps(v, v, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 
-        void SSE2MathImpl::add2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept
+        void SSE2MathImpl::add2(float2& result, const float2& lhs, const float2& rhs) noexcept
         {
-            __m128 a = _mm_set_ps(0.0f, 0.0f, ay, ax);
-            __m128 b = _mm_set_ps(0.0f, 0.0f, by, bx);
-            __m128 res = _mm_add_ps(a, b);
-            _mm_store_ss(&rx, res);
-            _mm_store_ss(&ry, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
+            __m128 va = _mm_set_ps(0.0f, 0.0f, lhs.y, lhs.x);
+            __m128 vb = _mm_set_ps(0.0f, 0.0f, rhs.y, rhs.x);
+            __m128 res = _mm_add_ps(va, vb);
+            _mm_store_ss(&result.x, res);
+            _mm_store_ss(&result.y, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 
-        void SSE2MathImpl::sub2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept
+        void SSE2MathImpl::sub2(float2& result, const float2& lhs, const float2& rhs) noexcept
         {
-            __m128 a = _mm_set_ps(0.0f, 0.0f, ay, ax);
-            __m128 b = _mm_set_ps(0.0f, 0.0f, by, bx);
-            __m128 res = _mm_sub_ps(a, b);
-            _mm_store_ss(&rx, res);
-            _mm_store_ss(&ry, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
+            __m128 va = _mm_set_ps(0.0f, 0.0f, lhs.y, lhs.x);
+            __m128 vb = _mm_set_ps(0.0f, 0.0f, rhs.y, rhs.x);
+            __m128 res = _mm_sub_ps(va, vb);
+            _mm_store_ss(&result.x, res);
+            _mm_store_ss(&result.y, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 
-        void SSE2MathImpl::mul2(float& rx, float& ry, float x, float y, float scalar) noexcept
+        void SSE2MathImpl::mul2(float2& result, const float2& vec, float scalar) noexcept
         {
-            __m128 v = _mm_set_ps(0.0f, 0.0f, y, x);
+            __m128 v = _mm_set_ps(0.0f, 0.0f, vec.y, vec.x);
             __m128 s = _mm_set1_ps(scalar);
             __m128 res = _mm_mul_ps(v, s);
-            _mm_store_ss(&rx, res);
-            _mm_store_ss(&ry, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
+            _mm_store_ss(&result.x, res);
+            _mm_store_ss(&result.y, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 
-        void SSE2MathImpl::div2(float& rx, float& ry, float x, float y, float scalar) noexcept
+        void SSE2MathImpl::div2(float2& result, const float2& vec, float scalar) noexcept
         {
             if (std::fabs(scalar) < EPSILON)
             {
-                rx = ry = 0.0f;
+                result.x = result.y = 0.0f;
                 return;
             }
-            __m128 v = _mm_set_ps(0.0f, 0.0f, y, x);
+            __m128 v = _mm_set_ps(0.0f, 0.0f, vec.y, vec.x);
             __m128 s = _mm_set1_ps(1.0f / scalar);
             __m128 res = _mm_mul_ps(v, s);
-            _mm_store_ss(&rx, res);
-            _mm_store_ss(&ry, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
+            _mm_store_ss(&result.x, res);
+            _mm_store_ss(&result.y, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 
-        void SSE2MathImpl::lerp2(float& rx, float& ry, float ax, float ay, float bx, float by, float t) noexcept
+        void SSE2MathImpl::lerp2(float2& result, const float2& lhs, const float2& rhs, float t) noexcept
         {
-            __m128 a = _mm_set_ps(0.0f, 0.0f, ay, ax);
-            __m128 b = _mm_set_ps(0.0f, 0.0f, by, bx);
+            __m128 va = _mm_set_ps(0.0f, 0.0f, lhs.y, lhs.x);
+            __m128 vb = _mm_set_ps(0.0f, 0.0f, rhs.y, rhs.x);
             __m128 tvec = _mm_set1_ps(t);
-            __m128 res = _mm_add_ps(a, _mm_mul_ps(_mm_sub_ps(b, a), tvec));
-            _mm_store_ss(&rx, res);
-            _mm_store_ss(&ry, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
+            __m128 res = _mm_add_ps(va, _mm_mul_ps(_mm_sub_ps(vb, va), tvec));
+            _mm_store_ss(&result.x, res);
+            _mm_store_ss(&result.y, _mm_shuffle_ps(res, res, _MM_SHUFFLE(1, 1, 1, 1)));
         }
 #endif
 
@@ -256,7 +256,7 @@ namespace gina
 
     float float2::lengthSquared() const noexcept
     {
-        return detail::MathDispatch::length2Impl(x, y);
+        return detail::MathDispatch::length2Impl(*this);
     }
 
     float float2::length() const noexcept
@@ -278,30 +278,30 @@ namespace gina
 
     void float2::normalize() noexcept
     {
-        detail::MathDispatch::normalize2Impl(x, y);
+        detail::MathDispatch::normalize2Impl(*this);
     }
 
     float2& float2::operator+=(const float2& other) noexcept
     {
-        detail::MathDispatch::add2Impl(x, y, x, y, other.x, other.y);
+        detail::MathDispatch::add2Impl(*this, *this, other);
         return *this;
     }
 
     float2& float2::operator-=(const float2& other) noexcept
     {
-        detail::MathDispatch::sub2Impl(x, y, x, y, other.x, other.y);
+        detail::MathDispatch::sub2Impl(*this, *this, other);
         return *this;
     }
 
     float2& float2::operator*=(float scalar) noexcept
     {
-        detail::MathDispatch::mul2Impl(x, y, x, y, scalar);
+        detail::MathDispatch::mul2Impl(*this, *this, scalar);
         return *this;
     }
 
     float2& float2::operator/=(float scalar) noexcept
     {
-        detail::MathDispatch::div2Impl(x, y, x, y, scalar);
+        detail::MathDispatch::div2Impl(*this, *this, scalar);
         return *this;
     }
 
@@ -322,7 +322,7 @@ namespace gina
 
     float dot(const float2& a, const float2& b) noexcept
     {
-        return detail::MathDispatch::dot2Impl(a.x, a.y, b.x, b.y);
+        return detail::MathDispatch::dot2Impl(a, b);
     }
 
     float2 reflect(const float2& vec, const float2& normal) noexcept
@@ -354,28 +354,28 @@ namespace gina
     float2 lerp(const float2& a, const float2& b, float t) noexcept
     {
         float2 result;
-        detail::MathDispatch::lerp2Impl(result.x, result.y, a.x, a.y, b.x, b.y, t);
+        detail::MathDispatch::lerp2Impl(result, a, b, t);
         return result;
     }
 
     float2 operator+(const float2& lhs, const float2& rhs) noexcept
     {
         float2 result;
-        detail::MathDispatch::add2Impl(result.x, result.y, lhs.x, lhs.y, rhs.x, rhs.y);
+        detail::MathDispatch::add2Impl(result, lhs, rhs);
         return result;
     }
 
     float2 operator-(const float2& lhs, const float2& rhs) noexcept
     {
         float2 result;
-        detail::MathDispatch::sub2Impl(result.x, result.y, lhs.x, lhs.y, rhs.x, rhs.y);
+        detail::MathDispatch::sub2Impl(result, lhs, rhs);
         return result;
     }
 
     float2 operator*(const float2& vec, float scalar) noexcept
     {
         float2 result;
-        detail::MathDispatch::mul2Impl(result.x, result.y, vec.x, vec.y, scalar);
+        detail::MathDispatch::mul2Impl(result, vec, scalar);
         return result;
     }
 
@@ -387,7 +387,7 @@ namespace gina
     float2 operator/(const float2& vec, float scalar) noexcept
     {
         float2 result;
-        detail::MathDispatch::div2Impl(result.x, result.y, vec.x, vec.y, scalar);
+        detail::MathDispatch::div2Impl(result, vec, scalar);
         return result;
     }
 }

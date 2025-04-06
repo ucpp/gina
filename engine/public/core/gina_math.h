@@ -19,64 +19,6 @@
 
 namespace gina
 {
-    namespace detail 
-    {
-        struct BasicMathImpl
-        {
-            static float length2(float x, float y) noexcept;
-            static float dot2(float ax, float ay, float bx, float by) noexcept;
-            static void normalize2(float& x, float& y) noexcept;
-            static void add2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept;
-            static void sub2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept;
-            static void mul2(float& rx, float& ry, float x, float y, float scalar) noexcept;
-            static void div2(float& rx, float& ry, float x, float y, float scalar) noexcept;
-            static void lerp2(float& rx, float& ry, float ax, float ay, float bx, float by, float t) noexcept;
-        };
-
-        #if defined(GINA_SSE2_ENABLED)
-        struct SSE2MathImpl
-        {
-            static float length2(float x, float y) noexcept;
-            static float dot2(float ax, float ay, float bx, float by) noexcept;
-            static void normalize2(float& x, float& y) noexcept;
-            static void add2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept;
-            static void sub2(float& rx, float& ry, float ax, float ay, float bx, float by) noexcept;
-            static void mul2(float& rx, float& ry, float x, float y, float scalar) noexcept;
-            static void div2(float& rx, float& ry, float x, float y, float scalar) noexcept;
-            static void lerp2(float& rx, float& ry, float ax, float ay, float bx, float by, float t) noexcept;
-        };
-        #endif
-
-        struct MathDispatch 
-        {
-            using Length2Func = float(*)(float, float);
-            using Dot2Func = float(*)(float, float, float, float);
-            using Normalize2Func = void(*)(float&, float&);
-            using Add2Func = void(*)(float&, float&, float, float, float, float);
-            using Sub2Func = void(*)(float&, float&, float, float, float, float);
-            using Mul2Func = void(*)(float&, float&, float, float, float);
-            using Div2Func = void(*)(float&, float&, float, float, float);
-            using Lerp2Func = void(*)(float&, float&, float, float, float, float, float);
-
-            static Length2Func length2Impl;
-            static Dot2Func dot2Impl;
-            static Normalize2Func normalize2Impl;
-            static Add2Func add2Impl;
-            static Sub2Func sub2Impl;
-            static Mul2Func mul2Impl;
-            static Div2Func div2Impl;
-            static Lerp2Func lerp2Impl;
-
-            static void initialize() noexcept;
-            static void useSSE2() noexcept;
-            static void useBasic() noexcept;
-
-        private:
-            static bool initialized;
-            static bool isSSE2Supported() noexcept;
-        };
-    }
-
     constexpr float EPSILON = 1e-5f;
     constexpr float PI = 3.14159265358979323846f;
     constexpr float DEG_TO_RAD = PI / 180.0f;
@@ -170,6 +112,64 @@ namespace gina
     float2 operator*(const float2& vec, float scalar) noexcept;
     float2 operator*(float scalar, const float2& vec) noexcept;
     float2 operator/(const float2& vec, float scalar) noexcept;
+
+    namespace detail 
+    {
+        struct BasicMathImpl
+        {
+            static float length2(const float2& vec) noexcept;
+            static float dot2(const float2& lhs, const float2& rhs) noexcept;
+            static void normalize2(float2& vec) noexcept;
+            static void add2(float2& result, const float2& lhs, const float2& rhs) noexcept;
+            static void sub2(float2& result, const float2& lhs, const float2& rhs) noexcept;
+            static void mul2(float2& result, const float2& vec, float scalar) noexcept;
+            static void div2(float2& result, const float2& vec, float scalar) noexcept;
+            static void lerp2(float2& result, const float2& lhs, const float2& rhs, float t) noexcept;
+        };
+
+        #if defined(GINA_SSE2_ENABLED)
+        struct SSE2MathImpl
+        {
+            static float length2(const float2& vec) noexcept;
+            static float dot2(const float2& lhs, const float2& rhs) noexcept;
+            static void normalize2(float2& vec) noexcept;
+            static void add2(float2& result, const float2& lhs, const float2& rhs) noexcept;
+            static void sub2(float2& result, const float2& lhs, const float2& rhs) noexcept;
+            static void mul2(float2& result, const float2& vec, float scalar) noexcept;
+            static void div2(float2& result, const float2& vec, float scalar) noexcept;
+            static void lerp2(float2& result, const float2& lhs, const float2& rhs, float t) noexcept;
+        };
+        #endif
+
+        struct MathDispatch 
+        {
+            using Length2Func = float(*)(const float2&);
+            using Dot2Func = float(*)(const float2&, const float2&);
+            using Normalize2Func = void(*)(float2&);
+            using Add2Func = void(*)(float2&, const float2&, const float2&);
+            using Sub2Func = void(*)(float2&, const float2&, const float2&);
+            using Mul2Func = void(*)(float2&, const float2&, float);
+            using Div2Func = void(*)(float2&, const float2&, float);
+            using Lerp2Func = void(*)(float2&, const float2&, const float2&, float);
+
+            static Length2Func length2Impl;
+            static Dot2Func dot2Impl;
+            static Normalize2Func normalize2Impl;
+            static Add2Func add2Impl;
+            static Sub2Func sub2Impl;
+            static Mul2Func mul2Impl;
+            static Div2Func div2Impl;
+            static Lerp2Func lerp2Impl;
+
+            static void initialize() noexcept;
+            static void useSSE2() noexcept;
+            static void useBasic() noexcept;
+
+        private:
+            static bool initialized;
+            static bool isSSE2Supported() noexcept;
+        };
+    }
 }
 
 #endif // _GINA_MATH_H_
